@@ -11,21 +11,39 @@
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/icons/icon-192.png" />
     <title>WSA Site Assessment</title>
-    <script type="module" crossorigin src="/assets/index-offer-f8543f77.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/db-offer-d68f0a0b.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-Bx5rFd-I.css">
+    <script>
+      // GitHub Pages serves 404.html at the original path. A ?/path query is restored before the router starts.
+      (function (l) {
+        if (l.search.length > 1 && l.search.charAt(1) === '/') {
+          var decoded = l.search.slice(1).split('&').map(function (part) {
+            return part.replace(/~and~/g, '&')
+          }).join('?')
+          var base = l.pathname.endsWith('/') ? l.pathname.slice(0, -1) : l.pathname
+          history.replaceState(null, '', base + decoded + l.hash)
+        }
+        if (/\/404\.html$/.test(l.pathname)) {
+          var deep = new URLSearchParams(l.search).get('p')
+          if (deep) {
+            var prefix = l.pathname.replace(/404\.html$/, '')
+            l.replace(l.protocol + '//' + l.host + prefix + '?/' + deep.replace(/^\//, '') + l.hash)
+          }
+        }
+      })(window.location)
+    </script>
+    <script type="module" crossorigin src="/assets/index-CylODSAS.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/db-BsV-8NJ9.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-G-yCYdrb.css">
   <link rel="manifest" href="/manifest.webmanifest"></head>
   <body>
     <div id="root"></div>
-  
     <script>
       // Boot recovery: if setup fails or the route is unknown, never leave a blank screen.
       (function () {
         var STUCK = ["Opening this assessment…", "Opening assessments saved on this device…", "Loading the assessment…", "Loading observation…", "Loading settings…"];
-        function recover(reason) {
+        var home = "/";
+        function recover() {
           var root = document.getElementById("root");
-          if (!root) return;
-          if (root.getAttribute("data-wsa-recovered")) return;
+          if (!root || root.getAttribute("data-wsa-recovered")) return;
           var text = (root.innerText || "").trim();
           var empty = !root.childElementCount || text === "";
           var stuck = STUCK.some(function (s) { return text.indexOf(s) !== -1; });
@@ -34,12 +52,12 @@
           root.innerHTML = '<div style="font-family:system-ui,sans-serif;max-width:28rem;margin:3rem auto;padding:0 1.25rem;color:#062b3d">'
             + '<p style="font-size:1.35rem;font-weight:700;margin:0 0 .5rem">This screen could not open.</p>'
             + '<p style="font-size:.95rem;line-height:1.45;color:#3b5160;margin:0 0 1rem">Assessments already saved on this phone are usually still there. Open the list to continue.</p>'
-            + '<a href="/" style="display:inline-block;background:#062b3d;color:#fff;font-weight:600;text-decoration:none;border-radius:.75rem;padding:.75rem 1rem">Back to assessments</a>'
+            + '<a href="' + home + '" style="display:inline-block;background:#062b3d;color:#fff;font-weight:600;text-decoration:none;border-radius:.75rem;padding:.75rem 1rem">Back to assessments</a>'
             + '</div>';
         }
-        window.addEventListener("error", function () { setTimeout(function () { recover("error"); }, 50); });
-        window.addEventListener("unhandledrejection", function () { setTimeout(function () { recover("reject"); }, 50); });
-        setTimeout(function () { recover("timeout"); }, 4000);
+        window.addEventListener("error", function () { setTimeout(recover, 50); });
+        window.addEventListener("unhandledrejection", function () { setTimeout(recover, 50); });
+        setTimeout(recover, 4000);
       })();
     </script>
   </body>
