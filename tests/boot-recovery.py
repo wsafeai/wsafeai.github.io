@@ -62,8 +62,9 @@ def main() -> int:
 
         # 2. Example assessment opens
         page.goto(f"{BASE}/a/example-northline", wait_until="networkidle")
-        page.wait_for_selector("text=Continue the walk", timeout=8000)
-        if "Northline Yard" in page.inner_text("body"):
+        page.wait_for_selector("text=Start walkthrough", timeout=8000)
+        body = page.inner_text("body")
+        if "Northline Yard" in body and "Start walkthrough" in body:
             ok("example assessment opens")
         else:
             fail("example assessment did not open")
